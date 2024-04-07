@@ -77,6 +77,8 @@ public class Main {
 				if(people[i].isFinish) continue;
 				people[i].setDirection(arr);
 				people[i].move();
+			}
+			for(int i=1; i<=M; i++) {
 				if(arr[people[i].pair.x][people[i].pair.y] == STORE_VALUE * i) { // 목표 편의점에 도착했다면,
 					people[i].isFinish = true; // 도착
 					arr[people[i].pair.x][people[i].pair.y] = DESTROYED; // 파괴
@@ -140,7 +142,12 @@ public class Main {
 	
 	private static void print(int[][] arr) { // 디버깅용 함수
 		System.out.println();
-		for(int[] a : arr) System.out.println(Arrays.toString(a));
+		for(int i = 1; i<N+1; i++) {
+			for(int j=1; j<N+1; j++) {
+				System.out.print(arr[i][j] + "\t");
+			}
+			System.out.println();
+		}
 		System.out.println();
 	}
 	
@@ -211,10 +218,11 @@ public class Main {
 			}
 			
 			int curDir = -1;
-			
 			while(!q.isEmpty()) {
 				int[] data = q.poll();
+				
 				if(arr[data[0]][data[1]] == 1) {
+					
 					curDir = Math.max(curDir, data[data.length-1]);
 					continue;
 				}
@@ -235,7 +243,6 @@ public class Main {
 					}
 				}
 			}
-			
 			dirIdx = 3 - curDir; // 반대반향으로 돌리기
 		}
 		
