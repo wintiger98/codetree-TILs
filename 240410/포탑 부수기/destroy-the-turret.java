@@ -270,9 +270,10 @@ public class Main {
 
         // 살아있는 포탑 중 가장 큰 힘
         int ans = 0;
-        for (int i = 0; i < N; i++) {
-            ans = Math.max(ans, Arrays.stream(powerBoard[i]).max().orElse(1));
-        }
-        System.out.println(ans);
+        for(int i = 0; i < N; i++)
+            for(int j = 0; j < M; j++)
+                ans = Math.max(ans, powerBoard[i][j]);
+
+        System.out.print(ans);
     }
 }
