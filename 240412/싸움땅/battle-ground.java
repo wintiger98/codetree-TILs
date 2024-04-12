@@ -48,7 +48,6 @@ public class Main {
             playerBoard[x][y].add(players[i]);
         }
 
-
         while (K-- > 0) {
             for (Player player : players) {
                 // 1. 플레이어 이동
@@ -125,9 +124,9 @@ public class Main {
             guns[loser.x][loser.y].add(loser.gun); // 격자에 총 추가
             loser.gun = 0; // 총 삭제
         }
-        int cx = loser.x, cy = loser.y;
+        int cx = loser.x, cy = loser.y, dir = 0, i = 0;
         // 패자 : 원래 방향대로 한 칸 이동, 사람 있으면 90도 씩 회전
-        for (int i = 0, dir = loser.dir; i < 4; i++, dir = (dir + 1) % 4) {
+        for (i = 0, dir = loser.dir; i < 4; i++, dir = (dir + 1) % 4) {
             cx = loser.x + dx[dir];
             cy = loser.y + dy[dir];
             // 격자 범위 밖이면 회전
@@ -136,6 +135,7 @@ public class Main {
             if (!playerBoard[cx][cy].isEmpty()) continue;
             break;
         }
+        loser.dir = dir;
         // 원래 위치 없애기
         playerBoard[loser.x][loser.y].remove(loser);
         // 빈칸으로 이동
@@ -161,6 +161,7 @@ public class Main {
             return "Player{" +
                     idx +
                     ", " + gun +
+                    ", " + getTotalPower() +
                     '}';
         }
 
@@ -216,7 +217,8 @@ public class Main {
                     this.gun = guns[x][y].get(maxIdx);
                     // 삭제
                     guns[x][y].remove(maxIdx);
-                    guns[x][y].add(originGun);
+                    if(originGun > 0)
+                        guns[x][y].add(originGun);
                 }
             }
         }
