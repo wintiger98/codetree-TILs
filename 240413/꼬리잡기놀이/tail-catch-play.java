@@ -16,7 +16,6 @@ public class Main {
     static Line[] headers;
     static Line[] tails;
     static int N, M, K; // 격자 크기, 팀 개수, 라운드
-    static int curK; // 현재 라운드
     static int score; // 점수
 
     public static void main(String[] args) throws IOException {
@@ -53,14 +52,14 @@ public class Main {
         initTeams();
 
         // K 라운드 진행
-        while (K-- > 0) {
+        for(int i=1; i<=K; i++) {
             // 1. 머리사람 따라 한 칸 이동
             for (Team team : teams) {
                 team.move();
             }
             // 2. 공 던지기
             // 3. 공 맞은 팀의 경우 머리사람, 꼬리사람 바꿈 -> 방향 바꿔짐, 점수 num*num 만큼 획득
-            throwBall();
+            throwBall(i);
 
 //            print(board);
         }
@@ -82,45 +81,58 @@ public class Main {
         teams[teamIdx].changeOrder();
     }
 
-    private static void throwBall() {
-        // 1 <= <= N까지는 curK 행에 대해 던지기 왼->오
-        if (curK < N) {
-            for (int i = 0; i < N; i++) {
-                // 공에 맞으면 머리사람, 꼬리 사람 바꾸기
-                if (board[curK][i] >= 1 && board[curK][i] <= 3) {
-                    process(curK, i);
+    // turn 번째 라운드의 공을 던집니다.
+    // 공을 던졌을 때 이를 받은 팀의 번호를 반환합니다.
+    public static void throwBall(int turn) {
+        int t = (turn - 1) % (4 * N);
+
+        if(t < N) {
+            // 1 ~ n 라운드의 경우 왼쪽에서 오른쪽 방향으로 공을 던집니다.
+            for(int i = 0; i < N; i++) {
+                if(1 <= board[t][i] && board[t][i] <= 3) {
+                    // 사람이 있는 첫 번째 지점을 찾습니다.
+                    // 찾게 되면 점수를 체크한 뒤 찾은 사람의 팀 번호를 저장합니다.
+                    process(t, i);
                     break;
                 }
             }
         }
-        // N+1 <= <= 2*N 까지는 아래 -> 위
-        else if (curK < 2 * N) {
-            for (int i = N - 1; i >= 0; i--) {
-                if (board[i][curK - N] >= 1 && board[i][curK - N] <= 3) {
-                    process(i, curK - N);
+        else if(t < 2 * N) {
+            // n+1 ~ 2n 라운드의 경우 아래에서 윗쪽 방향으로 공을 던집니다.
+            t -= N;
+            for(int i = 0; i < N; i++) {
+                if(1 <= board[N + 1 - i][t] && board[N + 1 - i][t] <= 3) {
+                    // 사람이 있는 첫 번째 지점을 찾습니다.
+                    // 찾게 되면 점수를 체크한 뒤 찾은 사람의 팀 번호를 저장합니다.
+                    process(N + 1 - i, t);
                     break;
                 }
             }
         }
-        // 2*N+1 <= <= 3*N 까지는 오 ->왼
-        else if (curK < 3 * N) {
-            for (int i = N - 1; i >= 0; i--) {
-                if (board[3 * N - curK - 1][i] >= 1 && board[3 * N - curK - 1][i] <= 3) {
-                    process(3 * N - curK - 1, i);
+        else if(t < 3 * N) {
+            // 2n+1 ~ 3n 라운드의 경우 오른쪽에서 왼쪽 방향으로 공을 던집니다.
+            t -= (2 * N);
+            for(int i = 0; i < N; i++) {
+                if(1 <= board[N + 1 - t][N + 1 - i] && board[N + 1 - t][N + 1 - i] <= 3) {
+                    // 사람이 있는 첫 번째 지점을 찾습니다.
+                    // 찾게 되면 점수를 체크한 뒤 찾은 사람의 팀 번호를 저장합니다.
+                    process(N + 1 - t, N + 1 - i);
                     break;
                 }
             }
         }
-        // 3*N+1 <= 4*N 까지는
         else {
-            for (int i = 0; i < N; i++) {
-                if (board[i][4 * N - curK - 1] >= 1 && board[i][4 * N - curK - 1] <= 3) {
-                    process(i, 4 * N - curK - 1);
+            // 3n+1 ~ 4n 라운드의 경우 위에서 아랫쪽 방향으로 공을 던집니다.
+            t -= (3 * N);
+            for(int i = 0; i < N; i++) {
+                if(1 <= board[i][N + 1 - t] && board[i][N + 1 - t] <= 3) {
+                    // 사람이 있는 첫 번째 지점을 찾습니다.
+                    // 찾게 되면 점수를 체크한 뒤 찾은 사람의 팀 번호를 저장합니다.
+                    process(i, N + 1 - t);
                     break;
                 }
             }
         }
-        curK = (curK + 1) % (4 * N);
     }
 
     // teams 채우기
