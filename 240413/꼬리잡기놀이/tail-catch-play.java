@@ -101,10 +101,10 @@ public class Main {
             // n+1 ~ 2n 라운드의 경우 아래에서 윗쪽 방향으로 공을 던집니다.
             t -= N;
             for(int i = 0; i < N; i++) {
-                if(1 <= board[N - i][t] && board[N - i][t] <= 3) {
+                if(1 <= board[N - 1 - i][t] && board[N - 1 - i][t] <= 3) {
                     // 사람이 있는 첫 번째 지점을 찾습니다.
                     // 찾게 되면 점수를 체크한 뒤 찾은 사람의 팀 번호를 저장합니다.
-                    process(N - i, t);
+                    process(N - 1 - i, t);
                     break;
                 }
             }
@@ -113,10 +113,10 @@ public class Main {
             // 2n+1 ~ 3n 라운드의 경우 오른쪽에서 왼쪽 방향으로 공을 던집니다.
             t -= (2 * N);
             for(int i = 0; i < N; i++) {
-                if(1 <= board[N - t][N - i] && board[N - t][N - i] <= 3) {
+                if(1 <= board[N - 1 - t][N - 1 - i] && board[N - 1 - t][N - 1 - i] <= 3) {
                     // 사람이 있는 첫 번째 지점을 찾습니다.
                     // 찾게 되면 점수를 체크한 뒤 찾은 사람의 팀 번호를 저장합니다.
-                    process(N - t, N - i);
+                    process(N - 1 - t, N - 1 - i);
                     break;
                 }
             }
@@ -125,10 +125,10 @@ public class Main {
             // 3n+1 ~ 4n 라운드의 경우 위에서 아랫쪽 방향으로 공을 던집니다.
             t -= (3 * N);
             for(int i = 0; i < N; i++) {
-                if(1 <= board[i][N - t] && board[i][N - t] <= 3) {
+                if(1 <= board[i][N - 1 - t] && board[i][N - 1 - t] <= 3) {
                     // 사람이 있는 첫 번째 지점을 찾습니다.
                     // 찾게 되면 점수를 체크한 뒤 찾은 사람의 팀 번호를 저장합니다.
-                    process(i, N - t);
+                    process(i, N - 1 - t);
                     break;
                 }
             }
